@@ -23,6 +23,12 @@ class Hotel:
         df.to_csv(HOTELS_DATA_PATH, index=False)
 
 
+class SpaHotel(Hotel):
+    def __init__(self, hotel: Hotel) -> None:
+        self.id = hotel.id
+        self.name = hotel.name
+
+
 class ReservationTicket:
     def __init__(self, customer_name: str, hotel_to_book: Hotel) -> None:
         self.user_name = customer_name
@@ -36,6 +42,20 @@ class ReservationTicket:
             Your booking details are as follows:
             Name: {self.user_name}
             Hotel Name: {self.hotel.name}"""
+        return self.content
+
+
+class SpaReservationTicket():
+    def __init__(self, customer_name: str, spa_to_book: SpaHotel) -> None:
+        self.user_name = customer_name
+        self.spa = spa_to_book
+
+    def generate(self) -> str:
+        self.content = f"""
+            Thank you for your SPA reservation!
+            Here are your SPA booking data:
+            Name: {self.user_name}
+            Hotel Name: {self.spa.name}"""
         return self.content
 
 
@@ -77,8 +97,12 @@ if hotel.available():
         hotel.book()
         user_name: str = input("Enter your name: ")
         reservation_ticket = ReservationTicket(user_name, hotel)
-        reservation_ticket.generate()
-        print(reservation_ticket.content)
+        print(reservation_ticket.generate())
+        want_spa = input("Do you want to book a SPA packagpasse? (yes/no): ")
+        if want_spa == "yes":
+            hotel = SpaHotel(hotel)
+            spa_reservation_ticket = SpaReservationTicket(user_name, hotel)
+            print(spa_reservation_ticket.generate())
     else:
         print("Invalid credit card")
 else:
