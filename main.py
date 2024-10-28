@@ -5,7 +5,8 @@ DATA_PATH = "data/hotels.csv"
 
 class Hotel:
     def __init__(self, hotel_id: int) -> None:
-        self.id = hotel_id
+        self.id: int = hotel_id
+        self.name: str = df.loc[df["id"] == self.id, "name"].squeeze()
 
     def available(self) -> bool:
         """Checks if the hotel is available for booking"""
@@ -26,7 +27,13 @@ class ReservationTicket:
         self.hotel = hotel_to_book
 
     def generate(self) -> str:
-        self.content = f"Hello {self.user_name}, your reservation is confirmed for hotel {self.hotel.id}"
+        self.content = f"""
+            Hello {self.user_name}.
+            
+            Thank your for your reservation!
+            Your booking details are as follows:
+            Name: {self.user_name}
+            Hotel Name: {self.hotel.name}"""
         return self.content
 
 
