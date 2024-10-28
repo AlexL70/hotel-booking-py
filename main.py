@@ -24,9 +24,9 @@ class Hotel:
 
 
 class SpaHotel(Hotel):
-    def __init__(self, hotel: Hotel) -> None:
-        self.id = hotel.id
-        self.name = hotel.name
+    def book_spa_package(self):
+        """Books the SPA package"""
+        pass
 
 
 class ReservationTicket:
@@ -87,7 +87,7 @@ cdf = pd.read_csv(CARDS_DATA_PATH, dtype=str).to_dict(orient="records")
 scdf = pd.read_csv(CARDS_SEC_DATA_PATH, dtype=str)
 print(df)
 hotel_id: int = int(input("Enter hotel id: "))
-hotel = Hotel(hotel_id)
+hotel = SpaHotel(hotel_id)
 if hotel.available():
     credit_card = SecureCreditCard(number="1234567890123456")
     if credit_card.validate(expiration="12/26", holder="JOHN SMITH", cvc="123"):
@@ -100,7 +100,7 @@ if hotel.available():
         print(reservation_ticket.generate())
         want_spa = input("Do you want to book a SPA packagpasse? (yes/no): ")
         if want_spa == "yes":
-            hotel = SpaHotel(hotel)
+            hotel.book_spa_package()
             spa_reservation_ticket = SpaReservationTicket(user_name, hotel)
             print(spa_reservation_ticket.generate())
     else:
