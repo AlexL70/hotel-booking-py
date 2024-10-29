@@ -60,6 +60,13 @@ class ReservationTicket:
     def the_customer_name(self):
         return self.user_name.strip().title()
 
+    # This is a utitlity function defined as a static method
+    # static methods are not associated with either instance or class.
+    # In thins case class is used merely as a grouping mechanism.
+    @staticmethod
+    def eu_to_usd(euro: float, exchange_rate: float) -> float:
+        return euro * exchange_rate
+
 
 class SpaReservationTicket():
     def __init__(self, customer_name: str, spa_to_book: SpaHotel) -> None:
