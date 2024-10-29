@@ -26,6 +26,14 @@ class Hotel:
         self.df.loc[self.df["id"] == self.id, "available"] = 'no'
         self.df.to_csv(HOTELS_DATA_PATH, index=False)
 
+    @classmethod
+    def print_all(cls):
+        print(cls.df)
+
+    @classmethod
+    def count(cls):
+        return cls.df.shape[0]
+
 
 class SpaHotel(Hotel):
     def book_spa_package(self):
@@ -92,7 +100,9 @@ class SecureCreditCard(CreditCard):
             return False
 
 
-print(Hotel.df)
+print(
+    f"Welcome to the hotel booking system! {Hotel.count()} hotels are in stock.")
+Hotel.print_all()
 hotel_id: int = int(input("Enter hotel id: "))
 hotel = SpaHotel(hotel_id)
 if hotel.available():
