@@ -136,7 +136,7 @@ class SecureCreditCard(CreditCard):
             return False
 
 
-if __name__ == "__main__":
+def main() -> None:
     print(
         f"Welcome to the hotel booking system! {Hotel.count()} hotels are in stock.")
     Hotel.print_all()
@@ -162,3 +162,7 @@ if __name__ == "__main__":
             print("Invalid credit card")
     else:
         print("Hotel not available")
+
+
+if __name__ == "__main__":
+    main()
