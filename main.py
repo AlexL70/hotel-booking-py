@@ -6,21 +6,25 @@ CARDS_SEC_DATA_PATH = "data/card_security.csv"
 
 
 class Hotel:
+    # Load the hotels data; df is a class variable
+    df = pd.read_csv(HOTELS_DATA_PATH)
+
     def __init__(self, hotel_id: int) -> None:
         self.id: int = hotel_id
-        self.name: str = df.loc[df["id"] == self.id, "name"].squeeze()
+        self.name: str = self.df.loc[self.df["id"]
+                                     == self.id, "name"].squeeze()
 
     def available(self) -> bool:
         """Checks if the hotel is available for booking"""
-        if df.loc[df["id"] == self.id, "available"].squeeze() == "yes":
+        if self.df.loc[self.df["id"] == self.id, "available"].squeeze() == "yes":
             return True
         else:
             return False
 
     def book(self):
         """Books the hotel by changing the availability status to 'no'"""
-        df.loc[df["id"] == self.id, "available"] = 'no'
-        df.to_csv(HOTELS_DATA_PATH, index=False)
+        self.df.loc[self.df["id"] == self.id, "available"] = 'no'
+        self.df.to_csv(HOTELS_DATA_PATH, index=False)
 
 
 class SpaHotel(Hotel):
@@ -60,32 +64,35 @@ class SpaReservationTicket():
 
 
 class CreditCard:
+    # Load the credit card data; cdf is a class variable
+    cdf = pd.read_csv(CARDS_DATA_PATH, dtype=str).to_dict(orient="records")
+
     def __init__(self, number: str) -> None:
         self.number = number
 
     def validate(self, expiration: str, holder: str, cvc: str) -> bool:
         card_data = {"number": self.number, "expiration": expiration,
                      "holder": holder, "cvc": cvc}
-        if card_data in cdf:
+        if card_data in self.cdf:
             return True
         else:
             return False
 
 
 class SecureCreditCard(CreditCard):
+    # Load the secure credit card data; scdf is a class variable
+    scdf = pd.read_csv(CARDS_SEC_DATA_PATH, dtype=str)
+
     def authenticate(self, given_password: str) -> bool:
-        password = scdf.loc[scdf["number"] ==
-                            self.number, "password"].squeeze()
+        password = self.scdf.loc[self.scdf["number"] ==
+                                 self.number, "password"].squeeze()
         if password == given_password:
             return True
         else:
             return False
 
 
-df = pd.read_csv(HOTELS_DATA_PATH)
-cdf = pd.read_csv(CARDS_DATA_PATH, dtype=str).to_dict(orient="records")
-scdf = pd.read_csv(CARDS_SEC_DATA_PATH, dtype=str)
-print(df)
+print(Hotel.df)
 hotel_id: int = int(input("Enter hotel id: "))
 hotel = SpaHotel(hotel_id)
 if hotel.available():
