@@ -48,13 +48,17 @@ class ReservationTicket:
 
     def generate(self) -> str:
         self.content = f"""
-            Hello {self.user_name}.
+            Hello {self.the_customer_name}.
             
             Thank your for your reservation!
             Your booking details are as follows:
-            Name: {self.user_name}
+            Name: {self.the_customer_name}
             Hotel Name: {self.hotel.name}"""
         return self.content
+
+    @property
+    def the_customer_name(self):
+        return self.user_name.strip().title()
 
 
 class SpaReservationTicket():
@@ -66,9 +70,13 @@ class SpaReservationTicket():
         self.content = f"""
             Thank you for your SPA reservation!
             Here are your SPA booking data:
-            Name: {self.user_name}
+            Name: {self.the_customer_name}
             Hotel Name: {self.spa.name}"""
         return self.content
+
+    @property
+    def the_customer_name(self):
+        return self.user_name.strip().title()
 
 
 class CreditCard:
