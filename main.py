@@ -45,8 +45,9 @@ class ReservationTicket:
     def __init__(self, customer_name: str, hotel_to_book: Hotel) -> None:
         self.user_name = customer_name
         self.hotel = hotel_to_book
+        self.content = None
 
-    def generate(self) -> str:
+    def generate(self):
         self.content = f"""
             Hello {self.the_customer_name}.
             
@@ -54,7 +55,6 @@ class ReservationTicket:
             Your booking details are as follows:
             Name: {self.the_customer_name}
             Hotel Name: {self.hotel.name}"""
-        return self.content
 
     @property
     def the_customer_name(self):
@@ -66,6 +66,16 @@ class ReservationTicket:
     @staticmethod
     def eu_to_usd(euro: float, exchange_rate: float) -> float:
         return euro * exchange_rate
+
+    # __str__ is a special method that is called by the print() function
+    # and by the str() constructor to convert an object into a string.
+    # Methods of this kind are called magic methods in Python.
+    # They are always preceded and followed by double underscores.
+    # They changes default behavior of the object.
+    def __str__(self):
+        if self.content is None:
+            self.generate()
+        return self.content
 
 
 class SpaReservationTicket():
@@ -115,27 +125,29 @@ class SecureCreditCard(CreditCard):
             return False
 
 
-print(
-    f"Welcome to the hotel booking system! {Hotel.count()} hotels are in stock.")
-Hotel.print_all()
-hotel_id: int = int(input("Enter hotel id: "))
-hotel = SpaHotel(hotel_id)
-if hotel.available():
-    credit_card = SecureCreditCard(number="1234567890123456")
-    if credit_card.validate(expiration="12/26", holder="JOHN SMITH", cvc="123"):
-        if not credit_card.authenticate(given_password="mypass"):
-            print("Credit card authentication failed.")
-            exit(1)
-        hotel.book()
-        user_name: str = input("Enter your name: ")
-        reservation_ticket = ReservationTicket(user_name, hotel)
-        print(reservation_ticket.generate())
-        want_spa = input("Do you want to book a SPA packagpasse? (yes/no): ")
-        if want_spa == "yes":
-            hotel.book_spa_package()
-            spa_reservation_ticket = SpaReservationTicket(user_name, hotel)
-            print(spa_reservation_ticket.generate())
+if __name__ == "__main__":
+    print(
+        f"Welcome to the hotel booking system! {Hotel.count()} hotels are in stock.")
+    Hotel.print_all()
+    hotel_id: int = int(input("Enter hotel id: "))
+    hotel = SpaHotel(hotel_id)
+    if hotel.available():
+        credit_card = SecureCreditCard(number="1234567890123456")
+        if credit_card.validate(expiration="12/26", holder="JOHN SMITH", cvc="123"):
+            if not credit_card.authenticate(given_password="mypass"):
+                print("Credit card authentication failed.")
+                exit(1)
+            hotel.book()
+            user_name: str = input("Enter your name: ")
+            reservation_ticket = ReservationTicket(user_name, hotel)
+            print(reservation_ticket)
+            want_spa = input(
+                "Do you want to book a SPA packagpasse? (yes/no): ")
+            if want_spa == "yes":
+                hotel.book_spa_package()
+                spa_reservation_ticket = SpaReservationTicket(user_name, hotel)
+                print(spa_reservation_ticket.generate())
+        else:
+            print("Invalid credit card")
     else:
-        print("Invalid credit card")
-else:
-    print("Hotel not available")
+        print("Hotel not available")
