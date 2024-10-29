@@ -1,4 +1,5 @@
 import pandas as pd
+from abc import ABC, abstractmethod
 
 HOTELS_DATA_PATH = "data/hotels.csv"
 CARDS_DATA_PATH = "data/cards.csv"
@@ -41,13 +42,33 @@ class SpaHotel(Hotel):
         pass
 
 
-class ReservationTicket:
+class AbstractTicket(ABC):
+    def __init__(self) -> None:
+        self.content: str = None
+
+    @abstractmethod
+    def generate(self) -> None:
+        """Generates the ticket content"""
+        pass
+
+    # __str__ is a special method that is called by the print() function
+    # and by the str() constructor to convert an object into a string.
+    # Methods of this kind are called magic methods in Python.
+    # They are always preceded and followed by double underscores.
+    # They changes default behavior of the object.
+    def __str__(self):
+        if self.content is None:
+            self.generate()
+        return self.content
+
+
+class ReservationTicket(AbstractTicket):
     def __init__(self, customer_name: str, hotel_to_book: Hotel) -> None:
+        super().__init__()
         self.user_name = customer_name
         self.hotel = hotel_to_book
-        self.content = None
 
-    def generate(self):
+    def generate(self) -> None:
         self.content = f"""
             Hello {self.the_customer_name}.
             
@@ -67,29 +88,19 @@ class ReservationTicket:
     def eu_to_usd(euro: float, exchange_rate: float) -> float:
         return euro * exchange_rate
 
-    # __str__ is a special method that is called by the print() function
-    # and by the str() constructor to convert an object into a string.
-    # Methods of this kind are called magic methods in Python.
-    # They are always preceded and followed by double underscores.
-    # They changes default behavior of the object.
-    def __str__(self):
-        if self.content is None:
-            self.generate()
-        return self.content
 
-
-class SpaReservationTicket():
+class SpaReservationTicket(AbstractTicket):
     def __init__(self, customer_name: str, spa_to_book: SpaHotel) -> None:
+        super().__init__()
         self.user_name = customer_name
         self.spa = spa_to_book
 
-    def generate(self) -> str:
+    def generate(self) -> None:
         self.content = f"""
             Thank you for your SPA reservation!
             Here are your SPA booking data:
             Name: {self.the_customer_name}
             Hotel Name: {self.spa.name}"""
-        return self.content
 
     @property
     def the_customer_name(self):
@@ -146,7 +157,7 @@ if __name__ == "__main__":
             if want_spa == "yes":
                 hotel.book_spa_package()
                 spa_reservation_ticket = SpaReservationTicket(user_name, hotel)
-                print(spa_reservation_ticket.generate())
+                print(spa_reservation_ticket)
         else:
             print("Invalid credit card")
     else:
